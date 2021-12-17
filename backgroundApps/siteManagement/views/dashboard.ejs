@@ -1,0 +1,70 @@
+<head>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+</head>
+<!-- <form action="submit">
+    <h1>Hello Mom!</h1>
+    <input type="text"><br>
+    <input type="submit" value="submit">
+</form> -->
+    <table id="bidData">
+        <thead>
+            <tr>
+                <th>User</th>
+                <th>Bid Amount</th>
+                <th>Auction Name</th>
+                <th>Bid ID</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td>HyFlicker</td>
+                <td>$50</td>
+                <td>Blue Fish</td>
+            </tr>
+        </tbody>
+    </table>
+
+    <a href="/logout"><button>Logout!</button></a>
+
+<script>
+    const table = document.querySelector("#bidData");
+    console.log(table);
+    let webSocket = new WebSocket('ws://localhost:3031');
+    webSocket.onopen = function(event){
+        console.log("Websocket is now open!");
+        let obj = {
+            id : 123456,
+            appName : "MrsOEF5 Dashboard"
+        }
+        webSocket.send(JSON.stringify(obj));
+    }
+    webSocket.onmessage = function(event){
+        event2 = JSON.parse(event.data);
+        // console.log(Array.isArray(event2));
+
+        if(Array.isArray(event2)){
+            event2.forEach(element => {
+                console.log(element);
+                let row = table.insertRow(1);
+                let user = row.insertCell(0);
+                let bidAmount = row.insertCell(1);
+                let auctionName = row.insertCell(2);
+                user.innerHTML = element.user
+                bidAmount.innerHTML = element.bidAmount;
+                auctionName.innerHTML = element.auctionName;
+            });
+        }else{
+            let row = table.insertRow(1);
+            let user = row.insertCell(0);
+            let bidAmount = row.insertCell(1);
+            let auctionName = row.insertCell(2);
+            let bidData = event2.auctionBidLeader;
+            console.log(bidData);
+            user.innerHTML = bidData.name;
+            bidAmount.innerHTML = bidData.amount;
+            auctionName.innerHTML = event2.auctionInfo.name;
+        }
+
+    }
+
+</script>

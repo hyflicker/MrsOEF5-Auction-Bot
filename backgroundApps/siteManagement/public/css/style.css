@@ -1,0 +1,54 @@
+:root {
+    --header-height: 2.9rem;
+    --nav-width: 68px;
+    --first-color: #242038ff;
+    --first-color-light: #cac4ceff;
+    --white-color: #f7ece1ff;
+    --body-font: 'Nunito', sans-serif;
+    --normal-font-size: 1rem;
+    --z-fixed: 100;
+    --dark-purple: rgb(53, 58, 65);
+    --background-dark:rgb(57, 56, 59);
+    --middle-blue-purple: #8d86c9ff;
+    --lavender-gray: #cac4ceff;
+    --linen: #f7ece1ff;
+    --btn-color: #514e55;
+    --body-background: #212529;
+}
+
+html{
+    background-color: var(--body-background)
+}
+
+body{
+    background-color: var(--body-background) !important;
+}
+
+.card{
+    background-color: var(--dark-purple);
+    color: var(--white-color);
+    margin: 0 auto;
+    float: none;
+    margin-top: 10px;
+    width: 17rem;
+}
+
+.card-img-top{
+    border-radius: 160px !important;
+    
+}
+
+.card-img, .card-img-bottom, .card-img-top{
+    width: 70%;
+    margin: 0 auto;
+    margin-top: 10px;
+}
+
+.body-pd {
+    padding-left: calc(var(--nav-width));
+    background-color: var(--btn-color)
+}
+
+.bg-dark-purple{
+    background: var(--dark-purple) !important;
+}
