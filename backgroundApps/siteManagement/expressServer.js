@@ -57,15 +57,27 @@ app.get('/dashboard/:id',(req,res) => {
     
 })
 
+function sendUser(req){
+    let profile = req.session.profileImage
+    let user = req.session.userName
+    return {profile,user}
+}
+
 app.get('/channelselect', (req,res) => {
     if(req.session.userId){
-        let profile = req.session.profileImage
-        let user = req.session.userName
-        res.render('channelSelect',{user:user,profile:profile})
+        let data = sendUser(req)
+        res.render('channelSelect',{user:data.user,profile:data.profile})
     }else{
         res.redirect('/')
     }
     
+})
+
+app.get('/api/user', (req,res) =>{
+    if(req.session.userId){
+        let data = select(`user_data`,`WHERE twitchId = ${req.session.userId}`);
+        res.send(data);
+    }
 })
 
 app.get('/logout', (req,res) => {

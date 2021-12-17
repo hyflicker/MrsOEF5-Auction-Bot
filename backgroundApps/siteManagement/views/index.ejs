@@ -1,6 +1,10 @@
+<%- include('partials/header')%>
 
-<a class="btn btn-lg" id="logIn">Twitch Login</a>
-
+    <!-- Contains the navbar -->
+<%- include('partials/navbar')%>
+<body>
+    <a class="btn btn-lg btn-primary" id="logIn">Twitch Login</a>
+</body>
 <script>
     function nonce(length) {
         let text = "";
@@ -13,3 +17,4 @@
     let login = document.getElementById('logIn');
     login.href =`https://id.twitch.tv/oauth2/authorize?client_id=otgtyagad7fvv84uk33ourc88xwbht&redirect_uri=http://localhost:3030/loginauth&response_type=code&scope=moderation:read user:read:email openid&nonce=${nonce(64)}&state=${nonce(25)}&claim={"id_token":{"email":null,"email_verified":null},"userinfo":{"picture":null,"preferred_username":null,"updated_at":null}}`;
 </script>
+<%- include('partials/footer')%>

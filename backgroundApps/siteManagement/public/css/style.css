@@ -27,9 +27,8 @@ body{
 .card{
     background-color: var(--dark-purple);
     color: var(--white-color);
-    margin: 0 auto;
+    margin: 5px auto;
     float: none;
-    margin-top: 10px;
     width: 17rem;
 }
 

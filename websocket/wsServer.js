@@ -1,5 +1,4 @@
 const WebSocket = require('ws');
-const DataBaseCall = require('../classes/DataBaseCall');
 const wss = new WebSocket.Server({port : 3031});
 
 wss.on('connection', (ws) => {
