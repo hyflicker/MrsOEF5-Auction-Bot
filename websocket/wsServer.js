@@ -1,5 +1,6 @@
 const WebSocket = require('ws');
 const wss = new WebSocket.Server({port : 3031});
+const {select,insert,update,sqlDelete} = require('../backgroundApps/simplifiedCRUD');
 
 wss.on('connection', (ws) => {
     // console.log(ws);
@@ -11,13 +12,21 @@ wss.on('connection', (ws) => {
     };
     ws.id = wss.getUniqueID();
     wss.clients.forEach(function each(client) {
-        // console.log(`Client Id: ` + client.id)
+        console.log(`Client Id: ` + client.id)
     })
     ws.on('message', (clientMessage) => {
         let msg = JSON.parse(clientMessage);
-        // console.log("Client Message",msg);
+        
+        console.log("Client Message",msg);
+        let bids = select('bids','ORDER BY idbids LIMIT 20');
+        async function bidData (){
+            ws.send(JSON.stringify(await select('bids','ORDER BY idbids DESC LIMIT 20')))
+        }
+        bidData();
+        // console.log(bids)
+        // ws.send(JSON.stringify(bids));
         // console.log(msg.id)
-        ws.send(JSON.stringify([{user:"Frank",bidAmount : 50.01,auctionName:"Fat Cock Fish"},{user:"Bob",bidAmount:50.02,auctionName:"Fat Cock Fish"}]))
+        // ws.send(JSON.stringify([{user:"Frank",bidAmount : 50.01,auctionName:"Fat Cock Fish"},{user:"Bob",bidAmount:50.02,auctionName:"Fat Cock Fish"}]))
     });
     ws.on('close', () => {
         // console.log('Connection closed');

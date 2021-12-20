@@ -51,3 +51,12 @@ body{
 .bg-dark-purple{
     background: var(--dark-purple) !important;
 }
+
+.deleteRow{
+    width: fit-content;
+    height: fit-content;
+}
+
+#bigX{
+    color: red;
+}

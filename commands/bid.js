@@ -5,8 +5,8 @@ exports.execute = (client,message,channel,tags,self,args,command,db) => {
     let auctionInfo = aData.auctionInfo;
     let auctionBidLeader = aData.auctionBidLeader;
     let num = parseFloat(args[0].match(/-?\d+(\.\d{1,2})?/g));
-    console.log("NUM: ", num)
-    console.log(aData)
+    // console.log("NUM: ", num)
+    // console.log(aData)
     if(auctionInfo.active == 1){  
         console.log(auctionBidLeader);
         if(Number.isFinite(num) && (auctionBidLeader.amount == null || num > auctionBidLeader.amount) && num > 0){
@@ -27,9 +27,10 @@ exports.execute = (client,message,channel,tags,self,args,command,db) => {
                     }
                 }
                 wss.clients.forEach(function each (ws) {
+                    console.log(wss.clients)
                     ws.send(JSON.stringify(obj))
                 })
-                console.log(obj)
+                // console.log(obj)
                 fs.writeFileSync("./data/auctionData.json",JSON.stringify(obj), (err) => {
                     if(err) throw err;
                     console.log("Data written to file.")

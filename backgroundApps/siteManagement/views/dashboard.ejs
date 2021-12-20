@@ -1,3 +1,7 @@
+<%- include('partials/header')%>
+</header>
+    <!-- Contains the navbar -->
+    <%- include('partials/navbar')%>
 <head>
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
 </head>
@@ -6,26 +10,27 @@
     <input type="text"><br>
     <input type="submit" value="submit">
 </form> -->
-    <table id="bidData">
+<div class="container overflow-auto" style="height: 30rem;">
+    <table id="bidData" class="table table-dark">
         <thead>
             <tr>
                 <th>User</th>
                 <th>Bid Amount</th>
                 <th>Auction Name</th>
                 <th>Bid ID</th>
+                <th class="deleteRow"></th>
             </tr>
         </thead>
         <tbody>
-            <tr>
-                <td>HyFlicker</td>
-                <td>$50</td>
-                <td>Blue Fish</td>
-            </tr>
         </tbody>
     </table>
+</div>
+<div class="container">
+    <a href="/logout"><button class="btn btn-secondary">Logout!</button></a>
+</div>
+    
 
-    <a href="/logout"><button>Logout!</button></a>
-
+    
 <script>
     const table = document.querySelector("#bidData");
     console.log(table);
@@ -33,7 +38,7 @@
     webSocket.onopen = function(event){
         console.log("Websocket is now open!");
         let obj = {
-            id : 123456,
+            id : document.getElementById('twitchId').innerHTML,
             appName : "MrsOEF5 Dashboard"
         }
         webSocket.send(JSON.stringify(obj));
@@ -41,30 +46,40 @@
     webSocket.onmessage = function(event){
         event2 = JSON.parse(event.data);
         // console.log(Array.isArray(event2));
+        console.log(event2)
 
         if(Array.isArray(event2)){
-            event2.forEach(element => {
+            event2.reduceRight((_,element) => {
                 console.log(element);
                 let row = table.insertRow(1);
                 let user = row.insertCell(0);
                 let bidAmount = row.insertCell(1);
                 let auctionName = row.insertCell(2);
-                user.innerHTML = element.user
-                bidAmount.innerHTML = element.bidAmount;
+                let bidId = row.insertCell(3);
+                let deleteBid = row.insertCell(4);
+                user.innerHTML = element.name
+                bidAmount.innerHTML = element.amount;
                 auctionName.innerHTML = element.auctionName;
+                bidId.innerHTML = element.idbids;
+                deleteBid.innerHTML ="<button id='bigX' class='btn btn-dark'>X</button>"
             });
         }else{
             let row = table.insertRow(1);
             let user = row.insertCell(0);
             let bidAmount = row.insertCell(1);
             let auctionName = row.insertCell(2);
+            let bidId = row.insertCell(3);
             let bidData = event2.auctionBidLeader;
+            let deleteBid = row.insertCell(4);
             console.log(bidData);
             user.innerHTML = bidData.name;
             bidAmount.innerHTML = bidData.amount;
             auctionName.innerHTML = event2.auctionInfo.name;
+            bidId.innerHTML = bidData.bidID;
+            deleteBid.innerHTML = "<button id='bigX' class='btn btn-dark'>X</button>"
         }
 
     }
 
 </script>
+<%- include('partials/footer')%>

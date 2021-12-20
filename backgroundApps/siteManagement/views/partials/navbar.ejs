@@ -7,33 +7,37 @@
           </button>
           <div class="collapse navbar-collapse" id="navbarNav">
             <ul class="navbar-nav ms-auto" id='test1'>
-              <li class="nav-item">
-                <a class="nav-link active" aria-current="page" href="/channelselect">Channel</a>
-              </li>
-              <li class="nav-item">
-                <a class="nav-link" href="/commands">Command List</a>
-              </li>
-              <li class="nav-item">
-                <a class="nav-link" href="/support">Support</a>
-              </li>
+           
               <% if(typeof user !== 'undefined'){
                 %>
+                <li class="nav-item">
+                  <a class="nav-link active" aria-current="page" href="/<%-user.toLowerCase()%>/channels">Channels</a>
+                </li>
+                <li class="nav-item">
+                  <a class="nav-link" href="/commands">Command List</a>
+                </li>   
                 <li class="nav-item dropdown">
-                <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                <a  class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
                     <img src="<%-profile%>" alt="Profile Image" width="30px" height="30px" style="border-radius: 50%" class="d-inline-block align-text-center"> <%-user%>
                 </a>
                 <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="navbarDropdown">
-                  <li><a class="dropdown-item" href="#">Profile</a></li>
-                  <li><a class="dropdown-item" href="/dashboard">Dashboard</a></li>
+                  <li><a class="dropdown-item" href="/<%-user.toLowerCase()%>/profile">Profile</a></li>
+                  <li><a class="dropdown-item" href="/<%-user.toLowerCase()%>/dashboard">Dashboard</a></li>
+                  <li><a class="dropdown-item" href="/support">Support</a></li>
                   <li><hr class="dropdown-divider"></li>
                   <li><a class="dropdown-item" href="/logout">Logout</a></li>
+                  <li id="twitchId" style="display: none;"><%-userId%></li>
+                  <li id="username" style="display: none;"><%-user%></li>
                 </ul>
               </li>
                 <%
               } else { 
                 %>
                   <li class="nav-item">
-                    <a class="nav-link" href='https://id.twitch.tv/oauth2/authorize?client_id=otgtyagad7fvv84uk33ourc88xwbht&redirect_uri=http://localhost:3030/loginauth&response_type=code&scope=moderation:read user:read:email openid&nonce=${nonce(64)}&state=${nonce(25)}&claim={"id_token":{"email":null,"email_verified":null},"userinfo":{"picture":null,"preferred_username":null,"updated_at":null}}'>Twitch Login</a>
+                    <a class="nav-link" href='/twitchlogin'>Twitch Login</a>
+                  </li>
+                  <li class="nav-item">
+                    <a class="nav-link" href="/support">Support</a>
                   </li>
                 <%
               }

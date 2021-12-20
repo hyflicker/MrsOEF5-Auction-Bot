@@ -1,0 +1,13 @@
+<!-- Contains the head -->
+<%- include('partials/header')%>
+<!-- Contains the navbar -->
+<%- include('partials/navbar')%>
+<!-- Write code below for the body-->
+<h1 style="color: white;">Fail to Authorize due to Twitch error or you do not have access at this time.</h1>
+<h4 style="color: white;">Page will refresh in 5 secs.</h4>
+<script>    
+setTimeout(function (){
+    location.href = '/';
+}, 5*1000)</script>
+<!-- Contains the closing tags to the body & html and JS scripts-->
+<%- include('partials/footer')%>
