@@ -28,7 +28,10 @@ exports.execute = (client,message,channel,tags,self,args,command,db) => {
                 }
                 wss.clients.forEach(function each (ws) {
                     console.log(wss.clients)
-                    ws.send(JSON.stringify(obj))
+                    if(ws.data.id == 144547369){
+                        ws.send(JSON.stringify(obj))
+                    }
+                    
                 })
                 // console.log(obj)
                 fs.writeFileSync("./data/auctionData.json",JSON.stringify(obj), (err) => {

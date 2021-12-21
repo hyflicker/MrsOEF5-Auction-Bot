@@ -10,20 +10,24 @@
     <input type="text"><br>
     <input type="submit" value="submit">
 </form> -->
-<div class="container overflow-auto" style="height: 30rem;">
-    <table id="bidData" class="table table-dark">
-        <thead>
-            <tr>
-                <th>User</th>
-                <th>Bid Amount</th>
-                <th>Auction Name</th>
-                <th>Bid ID</th>
-                <th class="deleteRow"></th>
-            </tr>
-        </thead>
-        <tbody>
-        </tbody>
-    </table>
+<div id="recentBids" class="container" style="height: 30rem; width: 25rem; display: block;"><!-- -->
+    <div class="header bg-dark-purple" >
+        <h4 style="color: white; margin: 0;">Recent Bids</h4>
+    </div>    
+    <div  id="tablebody" class="tablebody overflow-auto" style="height: inherit; width: inherit;">
+        <table id="bidData" class="table table-dark table-sm table-hover">
+            <thead class="align-middle" style="position: sticky; top: 0;">
+                <tr class="text-center">
+                    <th>User</th>
+                    <th>Bid Amount</th>
+                    <th>Auction Name</th>
+                    <th class="deleteRow"></th>
+                </tr>
+            </thead>
+            <tbody id="tBody" class="text-center align-middle">
+            </tbody>
+        </table>
+    </div>    
 </div>
 <div class="container">
     <a href="/logout"><button class="btn btn-secondary">Logout!</button></a>
@@ -32,13 +36,14 @@
 
     
 <script>
-    const table = document.querySelector("#bidData");
+    const table = document.querySelector("#tBody");
     console.log(table);
     let webSocket = new WebSocket('ws://localhost:3031');
     webSocket.onopen = function(event){
         console.log("Websocket is now open!");
         let obj = {
             id : document.getElementById('twitchId').innerHTML,
+            channel : document.getElementById('username').innerHTML,
             appName : "MrsOEF5 Dashboard"
         }
         webSocket.send(JSON.stringify(obj));
@@ -51,35 +56,30 @@
         if(Array.isArray(event2)){
             event2.reduceRight((_,element) => {
                 console.log(element);
-                let row = table.insertRow(1);
+                let row = table.insertRow(0);
                 let user = row.insertCell(0);
                 let bidAmount = row.insertCell(1);
                 let auctionName = row.insertCell(2);
-                let bidId = row.insertCell(3);
-                let deleteBid = row.insertCell(4);
+                let deleteBid = row.insertCell(3);
                 user.innerHTML = element.name
                 bidAmount.innerHTML = element.amount;
                 auctionName.innerHTML = element.auctionName;
-                bidId.innerHTML = element.idbids;
                 deleteBid.innerHTML ="<button id='bigX' class='btn btn-dark'>X</button>"
             });
         }else{
-            let row = table.insertRow(1);
+            let row = table.insertRow(0);
             let user = row.insertCell(0);
             let bidAmount = row.insertCell(1);
             let auctionName = row.insertCell(2);
-            let bidId = row.insertCell(3);
             let bidData = event2.auctionBidLeader;
-            let deleteBid = row.insertCell(4);
+            let deleteBid = row.insertCell(3);
             console.log(bidData);
             user.innerHTML = bidData.name;
             bidAmount.innerHTML = bidData.amount;
             auctionName.innerHTML = event2.auctionInfo.name;
-            bidId.innerHTML = bidData.bidID;
             deleteBid.innerHTML = "<button id='bigX' class='btn btn-dark'>X</button>"
         }
 
     }
-
 </script>
 <%- include('partials/footer')%>
