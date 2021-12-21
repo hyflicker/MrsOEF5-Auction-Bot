@@ -29,33 +29,49 @@
         </table>
     </div>    
 </div>
-<div class="container">
-    <a href="/logout"><button class="btn btn-secondary">Logout!</button></a>
-</div>
+<div id='DeleteModal' class="modal" tabindex="-1">
+    <div class="modal-dialog modal-dialog-centered">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title">Delete Bid</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body">
+          <p>Modal body text goes here.</p>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+          <button id="deleteBtn" type="button" class="btn btn-danger">Delete</button>
+        </div>
+      </div>
+    </div>
+  </div>
     
 
     
 <script>
     const table = document.querySelector("#tBody");
-    console.log(table);
+    // console.log(table);
     let webSocket = new WebSocket('ws://localhost:3031');
-    webSocket.onopen = function(event){
-        console.log("Websocket is now open!");
-        let obj = {
+    let obj = {
             id : document.getElementById('twitchId').innerHTML,
             channel : document.getElementById('username').innerHTML,
             appName : "MrsOEF5 Dashboard"
         }
+    webSocket.onopen = function(event){
+        console.log("Websocket is now open!");
+        obj.open = true;
         webSocket.send(JSON.stringify(obj));
+        delete obj.open;
     }
     webSocket.onmessage = function(event){
         event2 = JSON.parse(event.data);
         // console.log(Array.isArray(event2));
-        console.log(event2)
+        // console.log(event2)
 
         if(Array.isArray(event2)){
             event2.reduceRight((_,element) => {
-                console.log(element);
+                // console.log(element);
                 let row = table.insertRow(0);
                 let user = row.insertCell(0);
                 let bidAmount = row.insertCell(1);
@@ -64,9 +80,9 @@
                 user.innerHTML = element.name
                 bidAmount.innerHTML = element.amount;
                 auctionName.innerHTML = element.auctionName;
-                deleteBid.innerHTML ="<button id='bigX' class='btn btn-dark'>X</button>"
+                deleteBid.innerHTML ="<button type='button' class='bigX btn btn-dark' onclick='openModal(this)'>X</button>"
             });
-        }else{
+        }else if(event2.append){
             let row = table.insertRow(0);
             let user = row.insertCell(0);
             let bidAmount = row.insertCell(1);
@@ -77,9 +93,41 @@
             user.innerHTML = bidData.name;
             bidAmount.innerHTML = bidData.amount;
             auctionName.innerHTML = event2.auctionInfo.name;
-            deleteBid.innerHTML = "<button id='bigX' class='btn btn-dark'>X</button>"
+            deleteBid.innerHTML = "<button type='button' class='bigX btn btn-dark' onclick='openModal(this)'>X</button>"
         }
 
+    }
+    function openModal(e){
+        // console.log(e)
+        let td = e.parentNode;
+        let tr = td.parentNode;
+        let modal = new bootstrap.Modal(document.getElementById('DeleteModal'));
+        let deleteBtn = document.getElementById('deleteBtn');
+        modal.toggle();
+        deleteBtn.addEventListener("click", function(){
+            obj.rowData = {
+                user : tr.cells['0'].innerHTML,
+                bidAmount : tr.cells['1'].innerHTML,
+                auctionName : tr.cells['2'].innerHTML,
+            };
+            webSocket.send(JSON.stringify(obj))
+            webSocket.onmessage = function(event){
+                event2 = JSON.parse(event.data);
+                if(event2.rowData){
+                    console.log(event2)
+                    tr.parentNode.removeChild(tr);
+                    modal.toggle();
+                }
+            }
+            
+            
+        });
+    }
+
+    function deleteRow(){
+        let td = event.target.parentNode;
+        let tr = td.parentNode;
+        tr.parentNode.removeChild(tr);
     }
 </script>
 <%- include('partials/footer')%>

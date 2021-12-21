@@ -18,18 +18,32 @@ wss.on('connection', (ws) => {
     ws.on('message', (clientMessage) => {
         let msg = JSON.parse(clientMessage);
         // console.log("Client Message",msg);
-        let bids = select('bids','ORDER BY idbids LIMIT 20');
-        async function bidData (){
-            ws.send(JSON.stringify(await select('bids','ORDER BY idbids DESC LIMIT 20')))
+        if(msg.open){
+            async function bidData (){
+                ws.send(JSON.stringify(await select('bids','ORDER BY idbids DESC LIMIT 20')))
+            }
+            bidData();
+        }else if(msg.rowData){
+            sqlDelete('bids',`WHERE name = '${msg.rowData.user}' AND amount = ${msg.rowData.bidAmount} AND auctionName = '${msg.rowData.auctionName}'`)
+            .then((res) => {
+                if(res.affectedRows > 0){
+                    ws.send(JSON.stringify({
+                        rowData : msg.rowData,
+                        deleted : true
+                    }))
+                }else{
+                    ws.send(JSON.stringify({
+                        rowData : msg.rowData,
+                        deleted : false
+                    }))
+                }
+            })
         }
-        bidData();
+
         // console.log(bids)
         // ws.send(JSON.stringify(bids));
         // console.log(msg.id)
         // ws.send(JSON.stringify([{user:"Frank",bidAmount : 50.01,auctionName:"Fat Cock Fish"},{user:"Bob",bidAmount:50.02,auctionName:"Fat Cock Fish"}]))
-        ws.data = msg;
-        console.log(ws.clients);
-        console.log(ws.data);
     });
     ws.on('close', () => {
         // console.log('Connection closed');

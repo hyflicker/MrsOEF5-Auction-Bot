@@ -9,7 +9,7 @@ exports.execute = (client,message,channel,tags,self,args,command,db) => {
     // console.log(aData)
     if(auctionInfo.active == 1){  
         console.log(auctionBidLeader);
-        if(Number.isFinite(num) && (auctionBidLeader.amount == null || num > auctionBidLeader.amount) && num > 0){
+        if(Number.isFinite(num) && (auctionBidLeader.amount == null || num > auctionBidLeader.amount) && num > 0 && num < 1000000){
             db.execute(`INSERT INTO bids (name, twitchId, auctionId, dupCount,auctionName, amount) VALUES ('${tags['display-name']}', ${tags['user-id']}, ${auctionInfo.auctionID}, ${auctionInfo.dupCount},'${auctionInfo.name}', ?)`, [num], (err,res) => {
                 if(err) throw err;
             })
@@ -27,10 +27,12 @@ exports.execute = (client,message,channel,tags,self,args,command,db) => {
                     }
                 }
                 wss.clients.forEach(function each (ws) {
-                    console.log(wss.clients)
-                    if(ws.data.id == 144547369){
+                    // console.log(wss.clients)
+                    // if(ws.data.id == 144547369){
+                        obj.append = true;
                         ws.send(JSON.stringify(obj))
-                    }
+                        delete obj.append;
+                    // }
                     
                 })
                 // console.log(obj)
@@ -89,7 +91,7 @@ exports.execute = (client,message,channel,tags,self,args,command,db) => {
                     }
                 break;
                 default:
-                    client.say(channel,'Some Ting Wong')
+                    // client.say(channel,'Some Ting Wong')
                 break;
             }
         }else{
